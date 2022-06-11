@@ -1,4 +1,4 @@
-package com.skobelev;
+package com.pikalov;
 
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -23,6 +23,8 @@ public class Pomodoro {
         int breakMin = 5;
         // кол-во подходов
         int count = 1;
+        // множитель прогрессии рабочего времени
+        int workMult = 1;
 
         // длина рисунка progress bar
         int sizePrint = 30;
@@ -39,15 +41,18 @@ public class Pomodoro {
                 case "-b" -> breakMin = Integer.parseInt(cmd[++i]);
                 case "-count" -> count = Integer.parseInt(cmd[++i]);
                 case "-t" -> isTest = true;
+                case "-m" -> workMult = Integer.parseInt(cmd[++i]);
             }
         }
 
         if (!isCallHelp) {
             System.out.printf("Работаем %d min, " +
-                    "отдывахем %d min, кол-во подходов %d\n", workMin, breakMin, count);
+                    "отдывахем %d min, кол-во подходов %d," +
+                    " множитель прогрессии рабочего времени %d\n", workMin, breakMin, count, workMult);
             long startTime = System.currentTimeMillis();
             for (int i = 1; i <= count; i++) {
                 timer(workMin, breakMin, sizePrint);
+                workMin = workMin * workMult;
             }
             long endTime = System.currentTimeMillis();
             System.out.println("Pomodoro таймер истек: " + (endTime - startTime)/(1000 * 60) + " min");
@@ -98,6 +103,8 @@ public class Pomodoro {
         System.out.println(
                 "	-count <count>: количество итераций.\n");
         System.out.println(
-                "	--help: меню помощи.\n");
+                "	-m: множитель прогрессии рабочего времени.\n");
+        System.out.println(
+                "	-help: меню помощи.\n");
     }
 }
